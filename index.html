@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4f46e5">
+  <title>My School Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">SCHOOL ORGANIZER</div>
+        <h1>My School Dashboard</h1>
+        <p id="todayLabel"></p>
+      </div>
+      <div class="header-actions">
+        <button class="secondary-btn" id="exportBtn">Export</button>
+        <label class="secondary-btn file-btn">Import <input type="file" id="importInput" accept=".json" hidden></label>
+        <button class="primary-btn" id="addBtn">+ Add Item</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-grid">
+        <article class="summary-card today-card"><span>Today</span><strong id="todayCount">0</strong><small>items due / happening today</small></article>
+        <article class="summary-card"><span>Homework</span><strong id="homeworkCount">0</strong><small>upcoming homework</small></article>
+        <article class="summary-card"><span>Exams</span><strong id="examCount">0</strong><small>upcoming exams</small></article>
+        <article class="summary-card"><span>Action Required</span><strong id="actionCount">0</strong><small>needs your attention</small></article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Next 10 Days</h2>
+            <p>Everything coming up from today through the next 10 days.</p>
+          </div>
+          <div class="filters">
+            <select id="typeFilter">
+              <option value="all">All types</option>
+              <option value="homework">Homework</option>
+              <option value="exam">Exam</option>
+              <option value="notice">Notice</option>
+              <option value="activity">Activity</option>
+            </select>
+            <select id="priorityFilter">
+              <option value="all">All priorities</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div id="timeline" class="timeline"></div>
+      </section>
+
+      <section class="two-col">
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Action Required</h2><p>Items that need attention.</p></div></div>
+          <div id="actionList" class="compact-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Today's Timetable</h2><p id="weekdayLabel"></p></div><button class="text-btn" id="timetableBtn">Manage</button></div>
+          <div id="todayTimetable" class="timetable-list"></div>
+        </div>
+      </section>
+
+      <section class="two-col">
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Homework</h2><p>Upcoming assignments.</p></div></div>
+          <div id="homeworkList" class="compact-list"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-heading"><div><h2>Exams</h2><p>Upcoming tests and exams.</p></div></div>
+          <div id="examList" class="compact-list"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading">
+          <div><h2>Weekly Timetable</h2><p>Edit your regular school schedule.</p></div>
+          <button class="secondary-btn" id="editTimetableBtn">Edit Timetable</button>
+        </div>
+        <div id="weeklyTimetable" class="weekly-table-wrap"></div>
+      </section>
+    </main>
+
+    <footer>Data is stored in this browser. Use Export regularly if you want a backup.</footer>
+  </div>
+
+  <div class="modal hidden" id="eventModal">
+    <div class="modal-card">
+      <div class="modal-header"><h2 id="modalTitle">Add Item</h2><button class="icon-btn" data-close="eventModal">×</button></div>
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+        <div class="form-grid">
+          <label>Type<select id="eventType" required><option value="homework">Homework</option><option value="exam">Exam</option><option value="notice">Notice</option><option value="activity">Activity</option></select></label>
+          <label>Date<input type="date" id="eventDate" required></label>
+          <label>Title<input type="text" id="eventTitle" placeholder="e.g. Science Unit Test" required></label>
+          <label>Subject<input type="text" id="eventSubject" placeholder="e.g. Science"></label>
+          <label>Priority<select id="eventPriority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></label>
+          <label>Action required?<select id="eventAction"><option value="yes">Yes</option><option value="no">No</option></select></label>
+          <label class="full">Description<textarea id="eventDescription" rows="4" placeholder="Details, chapters, materials to bring, etc."></textarea></label>
+        </div>
+        <div class="modal-actions"><button type="button" class="secondary-btn" data-close="eventModal">Cancel</button><button class="primary-btn" type="submit">Save Item</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="timetableModal">
+    <div class="modal-card wide">
+      <div class="modal-header"><h2>Weekly Timetable</h2><button class="icon-btn" data-close="timetableModal">×</button></div>
+      <div id="timetableEditor"></div>
+      <div class="modal-actions"><button class="secondary-btn" data-close="timetableModal">Cancel</button><button class="primary-btn" id="saveTimetableBtn">Save Timetable</button></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
