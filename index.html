@@ -1,42 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#4f46e5">
-  <title>My School Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SNBP • Class III</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
-      <div>
-        <div class="eyebrow">SCHOOL ORGANIZER</div>
-        <h1>My School Dashboard</h1>
-        <p id="todayLabel"></p>
-      </div>
-      <div class="header-actions">
-        <button class="secondary-btn" id="exportBtn">Export</button>
-        <label class="secondary-btn file-btn">Import <input type="file" id="importInput" accept=".json" hidden></label>
-        <button class="primary-btn" id="addBtn">+ Add Item</button>
-      </div>
-    </header>
 
-    <main>
-      <section class="summary-grid">
-        <article class="summary-card today-card"><span>Today</span><strong id="todayCount">0</strong><small>items due / happening today</small></article>
-        <article class="summary-card"><span>Homework</span><strong id="homeworkCount">0</strong><small>upcoming homework</small></article>
-        <article class="summary-card"><span>Exams</span><strong id="examCount">0</strong><small>upcoming exams</small></article>
-        <article class="summary-card"><span>Action Required</span><strong id="actionCount">0</strong><small>needs your attention</small></article>
-      </section>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <strong>SNBP</strong>
+          <span>Class III</span>
+        </div>
+      </div>
 
-      <section class="panel">
-        <div class="panel-heading">
+      <nav class="nav">
+        <button class="nav-item active" data-page="upcoming">
+          ◷ <span>Upcoming</span>
+        </button>
+
+        <button class="nav-item" data-page="timetable">
+          ▦ <span>Timetable</span>
+        </button>
+
+        <button class="nav-item" data-page="homework">
+          ✓ <span>Homework</span>
+        </button>
+
+        <button class="nav-item" data-page="notes">
+          ▤ <span>Notes</span>
+        </button>
+
+        <button class="nav-item" data-page="feed">
+          ◉ <span>Feed</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <button id="exportBtn" class="side-action">
+          ⇩ Export backup
+        </button>
+
+        <label class="side-action import-label">
+          ⇧ Import backup
+          <input
+            id="importFile"
+            type="file"
+            accept=".json,application/json"
+          >
+        </label>
+      </div>
+    </aside>
+
+    <main class="main">
+
+      <header class="masthead">
+        <button
+          id="menuBtn"
+          class="icon-btn"
+          aria-label="Open menu">
+          ☰
+        </button>
+
+        <div class="masthead-title">
+          <div class="eyebrow">SNBP • CLASS III</div>
+          <h1 id="pageTitle">Upcoming</h1>
+        </div>
+
+        <div class="masthead-actions">
+          <span id="currentDate" class="current-date"></span>
+
+          <button
+            id="calendarBtn"
+            class="calendar-btn">
+            Subscribe on Calendar
+          </button>
+        </div>
+      </header>
+
+
+      <!-- UPCOMING -->
+
+      <section class="page" data-section="upcoming">
+
+        <div class="section-heading">
           <div>
-            <h2>Next 10 Days</h2>
-            <p>Everything coming up from today through the next 10 days.</p>
+            <h2>This week</h2>
+            <p>School work and activities at a glance.</p>
           </div>
+
+          <button
+            class="primary-btn"
+            data-add-event>
+            + Add item
+          </button>
+        </div>
+
+        <div id="weekStrip" class="week-strip"></div>
+
+        <div class="toolbar">
+
+          <div>
+            <strong>Upcoming</strong>
+            <span id="upcomingCount" class="muted"></span>
+          </div>
+
           <div class="filters">
+
             <select id="typeFilter">
               <option value="all">All types</option>
               <option value="homework">Homework</option>
@@ -44,79 +118,451 @@
               <option value="notice">Notice</option>
               <option value="activity">Activity</option>
             </select>
+
             <select id="priorityFilter">
-              <option value="all">All priorities</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
+              <option value="all">All priority</option>
+              <option value="high">High priority</option>
+              <option value="medium">Medium priority</option>
+              <option value="low">Low priority</option>
             </select>
+
           </div>
+
         </div>
+
         <div id="timeline" class="timeline"></div>
+
       </section>
 
-      <section class="two-col">
-        <div class="panel">
-          <div class="panel-heading"><div><h2>Action Required</h2><p>Items that need attention.</p></div></div>
-          <div id="actionList" class="compact-list"></div>
+
+      <!-- TIMETABLE -->
+
+      <section
+        class="page hidden"
+        data-section="timetable">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Timetable</h2>
+            <p>Today and the weekly class schedule.</p>
+          </div>
+
+          <button
+            id="editTimetableBtn"
+            class="primary-btn">
+            Edit timetable
+          </button>
+
         </div>
 
+
         <div class="panel">
-          <div class="panel-heading"><div><h2>Today's Timetable</h2><p id="weekdayLabel"></p></div><button class="text-btn" id="timetableBtn">Manage</button></div>
-          <div id="todayTimetable" class="timetable-list"></div>
+
+          <div class="panel-title">
+            <strong>Today</strong>
+            <span id="todayLabel"></span>
+          </div>
+
+          <div
+            id="todayTimetable"
+            class="today-list">
+          </div>
+
         </div>
+
+
+        <div class="panel">
+
+          <div class="panel-title">
+            <strong>Weekly timetable</strong>
+          </div>
+
+          <div
+            id="weeklyTimetable"
+            class="table-wrap">
+          </div>
+
+        </div>
+
       </section>
 
-      <section class="two-col">
-        <div class="panel">
-          <div class="panel-heading"><div><h2>Homework</h2><p>Upcoming assignments.</p></div></div>
-          <div id="homeworkList" class="compact-list"></div>
+
+      <!-- HOMEWORK -->
+
+      <section
+        class="page hidden"
+        data-section="homework">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Homework</h2>
+            <p>Assignments and submission dates.</p>
+          </div>
+
+          <button
+            class="primary-btn"
+            data-add-homework>
+            + Add homework
+          </button>
+
         </div>
-        <div class="panel">
-          <div class="panel-heading"><div><h2>Exams</h2><p>Upcoming tests and exams.</p></div></div>
-          <div id="examList" class="compact-list"></div>
+
+        <div
+          id="homeworkList"
+          class="simple-list">
         </div>
+
       </section>
 
-      <section class="panel">
-        <div class="panel-heading">
-          <div><h2>Weekly Timetable</h2><p>Edit your regular school schedule.</p></div>
-          <button class="secondary-btn" id="editTimetableBtn">Edit Timetable</button>
+
+      <!-- NOTES -->
+
+      <section
+        class="page hidden"
+        data-section="notes">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Notes</h2>
+            <p>Keep useful school notes in one place.</p>
+          </div>
+
+          <button
+            class="primary-btn"
+            data-add-note>
+            + Add note
+          </button>
+
         </div>
-        <div id="weeklyTimetable" class="weekly-table-wrap"></div>
+
+        <div
+          id="notesGrid"
+          class="notes-grid">
+        </div>
+
       </section>
+
+
+      <!-- FEED -->
+
+      <section
+        class="page hidden"
+        data-section="feed">
+
+        <div class="section-heading">
+
+          <div>
+            <h2>Feed</h2>
+            <p>Recent notices, homework and activities.</p>
+          </div>
+
+          <button
+            class="primary-btn"
+            data-add-event>
+            + Add item
+          </button>
+
+        </div>
+
+        <div
+          id="feedList"
+          class="simple-list">
+        </div>
+
+      </section>
+
+
+      <footer>
+        <span>
+          Browser storage • Your data stays on this device
+        </span>
+
+        <span>
+          Made with ♥ for Class III
+        </span>
+      </footer>
+
     </main>
-
-    <footer>Data is stored in this browser. Use Export regularly if you want a backup.</footer>
   </div>
 
-  <div class="modal hidden" id="eventModal">
+
+  <!-- EVENT MODAL -->
+
+  <div
+    id="eventModal"
+    class="modal hidden">
+
     <div class="modal-card">
-      <div class="modal-header"><h2 id="modalTitle">Add Item</h2><button class="icon-btn" data-close="eventModal">×</button></div>
+
+      <div class="modal-head">
+        <h3 id="eventModalTitle">
+          Add item
+        </h3>
+
+        <button
+          class="close-btn"
+          data-close="eventModal">
+          ×
+        </button>
+      </div>
+
+
       <form id="eventForm">
-        <input type="hidden" id="eventId">
+
+        <input
+          type="hidden"
+          id="eventId">
+
+
+        <label>
+          Title
+
+          <input
+            id="eventTitle"
+            required
+            placeholder="e.g. Maths Chapter 5">
+        </label>
+
+
         <div class="form-grid">
-          <label>Type<select id="eventType" required><option value="homework">Homework</option><option value="exam">Exam</option><option value="notice">Notice</option><option value="activity">Activity</option></select></label>
-          <label>Date<input type="date" id="eventDate" required></label>
-          <label>Title<input type="text" id="eventTitle" placeholder="e.g. Science Unit Test" required></label>
-          <label>Subject<input type="text" id="eventSubject" placeholder="e.g. Science"></label>
-          <label>Priority<select id="eventPriority"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select></label>
-          <label>Action required?<select id="eventAction"><option value="yes">Yes</option><option value="no">No</option></select></label>
-          <label class="full">Description<textarea id="eventDescription" rows="4" placeholder="Details, chapters, materials to bring, etc."></textarea></label>
+
+          <label>
+            Date
+
+            <input
+              id="eventDate"
+              type="date"
+              required>
+          </label>
+
+
+          <label>
+            Type
+
+            <select id="eventType">
+
+              <option value="homework">
+                Homework
+              </option>
+
+              <option value="exam">
+                Exam
+              </option>
+
+              <option value="notice">
+                Notice
+              </option>
+
+              <option value="activity">
+                Activity
+              </option>
+
+            </select>
+
+          </label>
+
         </div>
-        <div class="modal-actions"><button type="button" class="secondary-btn" data-close="eventModal">Cancel</button><button class="primary-btn" type="submit">Save Item</button></div>
+
+
+        <div class="form-grid">
+
+          <label>
+            Priority
+
+            <select id="eventPriority">
+
+              <option value="high">
+                High
+              </option>
+
+              <option value="medium">
+                Medium
+              </option>
+
+              <option value="low">
+                Low
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <label>
+            Time
+
+            <input
+              id="eventTime"
+              type="time">
+          </label>
+
+        </div>
+
+
+        <label>
+          Details
+
+          <textarea
+            id="eventDetails"
+            rows="3"
+            placeholder="Optional details">
+          </textarea>
+
+        </label>
+
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="ghost-btn"
+            data-close="eventModal">
+            Cancel
+          </button>
+
+          <button
+            class="primary-btn">
+            Save
+          </button>
+
+        </div>
+
       </form>
+
     </div>
+
   </div>
 
-  <div class="modal hidden" id="timetableModal">
-    <div class="modal-card wide">
-      <div class="modal-header"><h2>Weekly Timetable</h2><button class="icon-btn" data-close="timetableModal">×</button></div>
-      <div id="timetableEditor"></div>
-      <div class="modal-actions"><button class="secondary-btn" data-close="timetableModal">Cancel</button><button class="primary-btn" id="saveTimetableBtn">Save Timetable</button></div>
+
+  <!-- NOTE MODAL -->
+
+  <div
+    id="noteModal"
+    class="modal hidden">
+
+    <div class="modal-card">
+
+      <div class="modal-head">
+
+        <h3 id="noteModalTitle">
+          Add note
+        </h3>
+
+        <button
+          class="close-btn"
+          data-close="noteModal">
+          ×
+        </button>
+
+      </div>
+
+
+      <form id="noteForm">
+
+        <input
+          type="hidden"
+          id="noteId">
+
+
+        <label>
+          Title
+
+          <input
+            id="noteTitle"
+            required
+            placeholder="Note title">
+        </label>
+
+
+        <label>
+          Note
+
+          <textarea
+            id="noteBody"
+            rows="7"
+            required
+            placeholder="Write your note...">
+          </textarea>
+
+        </label>
+
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="ghost-btn"
+            data-close="noteModal">
+            Cancel
+          </button>
+
+          <button class="primary-btn">
+            Save
+          </button>
+
+        </div>
+
+      </form>
+
     </div>
+
   </div>
+
+
+  <!-- TIMETABLE MODAL -->
+
+  <div
+    id="timetableModal"
+    class="modal hidden">
+
+    <div class="modal-card wide">
+
+      <div class="modal-head">
+
+        <h3>
+          Edit timetable
+        </h3>
+
+        <button
+          class="close-btn"
+          data-close="timetableModal">
+          ×
+        </button>
+
+      </div>
+
+
+      <form id="timetableForm">
+
+        <div id="timetableEditor"></div>
+
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="ghost-btn"
+            data-close="timetableModal">
+            Cancel
+          </button>
+
+          <button class="primary-btn">
+            Save timetable
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
 
   <script src="app.js"></script>
+
 </body>
 </html>
